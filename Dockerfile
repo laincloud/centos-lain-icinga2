@@ -1,6 +1,6 @@
 FROM laincloud/centos-lain:20160503
 
-ADD . /Build/
+COPY . /Build/
 
 RUN yum install -y https://packages.icinga.org/epel/7/release/noarch/icinga-rpm-release-7-1.el7.centos.noarch.rpm \
     && pip install supervisor \
@@ -12,7 +12,7 @@ RUN yum install -y https://packages.icinga.org/epel/7/release/noarch/icinga-rpm-
 RUN cp /Build/supervisord.conf /etc/supervisord.conf \
     && /usr/lib/icinga2/prepare-dirs /etc/sysconfig/icinga2 \
     && icingacli setup token create | tee /Build/icingaweb.token \
-    && install -Dm640 -o icinga -g icinga /Build/ido-mysql.conf /etc/icinga2/features-available/ido-mysql.conf \
+    # && install -Dm640 -o icinga -g icinga /Build/ido-mysql.conf /etc/icinga2/features-available/ido-mysql.conf \
     && install -Dm640 -o icinga -g icinga /Build/api.conf /etc/icinga2/features-available/api.conf \
     && icinga2 feature enable ido-mysql || true \
     && icinga2 feature enable command || true \
@@ -37,6 +37,8 @@ RUN cp /Build/scripts/* /etc/icinga2/scripts/ \
     && icinga2 pki new-cert --cn icinga2 --key /etc/icinga2/pki/icinga2.key --csr /etc/icinga2/pki/icinga2.csr \
     && icinga2 pki sign-csr --csr /etc/icinga2/pki/icinga2.csr --cert /etc/icinga2/pki/icinga2.crt
 
-RUN echo '' > /etc/icinga2/conf.d/notifications.conf \
+RUN cp /Build/run_icinga.sh /run_icinga.sh \
+    && echo '' > /etc/icinga2/conf.d/notifications.conf \
     && echo '' > /etc/icinga2/conf.d/services.conf \
-    && echo '' > /etc/icinga2/conf.d/satellite.conf
+    && echo '' > /etc/icinga2/conf.d/satellite.conf \
+    && echo '' > /etc/icinga2/conf.d/commands.conf

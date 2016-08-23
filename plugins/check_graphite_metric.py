@@ -10,6 +10,7 @@ STATE_CRITICAL = 2
 STATE_UNKNOWN = 3
 STATE_DEPENDENT = 4
 
+
 def usage():
     _usage = '''
 Usage:
@@ -47,9 +48,10 @@ def pull_graphite_data(url):
             print "Error: No data was returned. Did you specify an existing metric? - " + url
             sys.exit(STATE_UNKNOWN)
         return data
-    except Exception,e:
-        print "Error: "+ str(e) +" - " + url
+    except Exception, e:
+        print "Error: " + str(e) + " - " + url
         sys.exit(STATE_UNKNOWN)
+
 
 def eval_graphite_data(data, seconds):
     """Get the most recent correct value from the data"""
@@ -70,13 +72,14 @@ def eval_graphite_data(data, seconds):
         else:
             data_value = 0.0
     else:
-    # Second, if we requested more than on graphite sample period, work out how
-    # many sample periods we wanted (python always rounds division *down*)
-        data_points = (seconds/sample_period)
-        data_set = [ float(x) for x in all_data_points[-data_points:]
-                     if not x.startswith("None") ]
+        # Second, if we requested more than on graphite sample period, work out
+        # how many sample periods we wanted
+        data_points = (seconds / sample_period)
+        data_set = [float(x)
+                    for x in all_data_points[-data_points:]
+                    if not x.startswith("None")]
         if data_set:
-            data_value = float( sum(data_set) / len(data_set) )
+            data_value = float(sum(data_set) / len(data_set))
         else:
             data_value = 0.0
     return data_value
@@ -107,12 +110,14 @@ def get_value(url, seconds=0):
 
 def main(argv):
     try:
-        opts, args = getopt.getopt(argv, 'hWULt:u:c:w:s:',
-                ['help', 'holt-winters', 'critupper',
-                    'critlower', 'type=', 'url=', 'crit=', 'warn=',
-                    'seconds=', 'd1=', 'd2=',
-                    'scale=' ,'scale-invert=']
-                )
+        opts, args = getopt.getopt(
+            argv,
+            'hWULt:u:c:w:s:',
+            ['help', 'holt-winters', 'critupper',
+             'critlower', 'type=', 'url=', 'crit=', 'warn=',
+             'seconds=', 'd1=', 'd2=',
+             'scale=', 'scale-invert=']
+        )
     except getopt.GetoptError, err:
         print str(err)
         sys.exit(STATE_UNKNOWN)
@@ -156,19 +161,19 @@ def main(argv):
             scale = float(arg)
         elif opt in ('--scale-invert'):
             scale = 1 / float(arg)
-    if not hw and ((url == None) or (warn == None) or (crit == None)) \
+    if not hw and ((url is None) or (warn is None) or (crit is None)) \
             and not diff1 and not diff2:
         usage()
         sys.exit(STATE_UNKNOWN)
 
-    if (diff1 == None and diff2 != None) or (diff1 != None and diff2 == None):
+    if (diff1 is None and diff2 is not None) or (diff1 is not None and diff2 is None):
         usage()
         sys.exit(STATE_UNKNOWN)
 
     if hw:
         graphite_data, graphite_lower, graphite_upper = get_hw_value(url, seconds)
         print 'Current value: %s, lower band: %s, upper band: %s' % \
-               (graphite_data, graphite_lower, graphite_upper)
+              (graphite_data, graphite_lower, graphite_upper)
         if (graphite_data > graphite_upper) or (graphite_data < graphite_lower):
             if critupper or critlower:
                 sys.exit(STATE_CRITICAL)
@@ -185,7 +190,7 @@ def main(argv):
     graphite_data *= scale
 
     print 'Current value: %s, warn threshold: %s, crit threshold: %s' % \
-           (graphite_data, warn, crit)
+          (graphite_data, warn, crit)
     if check_type == 'less':
         if crit >= graphite_data:
             sys.exit(STATE_CRITICAL)
