@@ -2,11 +2,14 @@ FROM laincloud/centos-lain:20160503
 
 COPY . /Build/
 
-RUN yum install -y https://packages.icinga.org/epel/7/release/noarch/icinga-rpm-release-7-1.el7.centos.noarch.rpm \
+RUN rpm --import http://packages.icinga.org/icinga.key \
+    && curl -o /etc/yum.repos.d/ICINGA-release.repo http://packages.icinga.org/epel/ICINGA-release.repo \
+    && yum makecache \
     && pip install supervisor \
     && sed -i '/nodocs/d' /etc/yum.conf \
-    && yum install -y icinga2-2.4.10 icinga2-ido-mysql-2.4.10 \
+    && yum install -y icinga2-2.5.4 icinga2-ido-mysql-2.5.4 \
     && yum install -y icingaweb2-2.3.4 icingacli-2.3.4 \
+    && yum install -y msmtp nagios-plugins-all \
     && yum clean all
 
 RUN cp /Build/supervisord.conf /etc/supervisord.conf \
@@ -18,10 +21,7 @@ RUN cp /Build/supervisord.conf /etc/supervisord.conf \
     && icinga2 feature enable command || true \
     && icinga2 feature enable compatlog || true \
     && icinga2 api setup || true \
-    && echo 'date.timezone = Asia/Shanghai' | tee -a /etc/php.ini \
-    && yum install -y msmtp \
-    && yum install -y nagios-plugins-all \
-    && yum clean all
+    && echo 'date.timezone = Asia/Shanghai' | tee -a /etc/php.ini
 
 RUN cp /Build/scripts/* /etc/icinga2/scripts/ \
     && cp /Build/sbin/* /usr/sbin \
