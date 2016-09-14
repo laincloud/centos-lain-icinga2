@@ -36,7 +36,7 @@ def sendSms(host, msg, template_id, phones):
     send msg via sms to a list of mobile phones
     """
     for phone in phones:
-        sendSingleSms(host, msg, phone)
+        sendSingleSms(host, msg, template_id, phone)
 
 
 if __name__ == "__main__":
