@@ -38,7 +38,5 @@ RUN cp /Build/scripts/* /etc/icinga2/scripts/ \
     && icinga2 pki sign-csr --csr /etc/icinga2/pki/icinga2.csr --cert /etc/icinga2/pki/icinga2.crt
 
 RUN cp /Build/run_icinga.sh /run_icinga.sh \
-    && echo '' > /etc/icinga2/conf.d/notifications.conf \
     && echo '' > /etc/icinga2/conf.d/services.conf \
-    && echo '' > /etc/icinga2/conf.d/satellite.conf \
-    && echo '' > /etc/icinga2/conf.d/commands.conf
+    && echo '' > /etc/icinga2/conf.d/satellite.conf
