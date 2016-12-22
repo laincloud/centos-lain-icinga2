@@ -1,4 +1,4 @@
-FROM laincloud/centos-lain:20160503
+FROM laincloud/centos-lain:20161222
 
 COPY . /Build/
 
@@ -7,8 +7,8 @@ RUN rpm --import http://packages.icinga.org/icinga.key \
     && yum makecache \
     && pip install supervisor \
     && sed -i '/nodocs/d' /etc/yum.conf \
-    && yum install -y icinga2-2.5.4 icinga2-ido-mysql-2.5.4 \
-    && yum install -y icingaweb2-2.3.4 icingacli-2.3.4 \
+    && yum install -y icinga2-2.6.0 icinga2-ido-mysql-2.6.0 \
+    && yum install -y icingaweb2-2.4.0 icingacli-2.4.0 \
     && yum install -y msmtp nagios-plugins-all \
     && yum clean all
 
