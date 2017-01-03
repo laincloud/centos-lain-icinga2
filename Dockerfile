@@ -1,4 +1,4 @@
-FROM laincloud/centos-lain:20161222
+FROM laincloud/centos-lain:20170103
 
 COPY . /Build/
 
@@ -10,6 +10,7 @@ RUN rpm --import http://packages.icinga.org/icinga.key \
     && yum install -y icinga2-2.6.0 icinga2-ido-mysql-2.6.0 \
     && yum install -y icingaweb2-2.4.0 icingacli-2.4.0 \
     && yum install -y msmtp nagios-plugins-all \
+    && yum install -y php-pdo php-pdo_mysql \
     && yum clean all
 
 RUN cp /Build/supervisord.conf /etc/supervisord.conf \
