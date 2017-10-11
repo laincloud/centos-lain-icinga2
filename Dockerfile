@@ -2,7 +2,7 @@ FROM laincloud/centos-lain:20170217
 
 COPY . /Build/
 
-RUN yum install https://packages.icinga.com/epel/icinga-rpm-release-7-latest.noarch.rpm \
+RUN yum install -y https://packages.icinga.com/epel/icinga-rpm-release-7-latest.noarch.rpm \
     && pip install supervisor \
     && sed -i '/nodocs/d' /etc/yum.conf \
     && yum install -y icinga2 icinga2-ido-mysql \
