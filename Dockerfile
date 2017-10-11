@@ -2,13 +2,11 @@ FROM laincloud/centos-lain:20170217
 
 COPY . /Build/
 
-RUN rpm --import http://packages.icinga.org/icinga.key \
-    && curl -o /etc/yum.repos.d/ICINGA-release.repo http://packages.icinga.org/epel/ICINGA-release.repo \
-    && yum makecache \
+RUN yum install https://packages.icinga.com/epel/icinga-rpm-release-7-latest.noarch.rpm
     && pip install supervisor \
     && sed -i '/nodocs/d' /etc/yum.conf \
-    && yum install -y icinga2-2.6.2 icinga2-ido-mysql-2.6.2 \
-    && yum install -y icingaweb2-2.4.1 icingacli-2.4.1 \
+    && yum install -y icinga2 icinga2-ido-mysql \
+    && yum install -y icingaweb2 icingacli \
     && yum install -y msmtp nagios-plugins-all \
     && yum install -y php-pdo php-pdo_mysql \
     && yum clean all
