@@ -26,6 +26,7 @@ def sendSingleSms(host, msg, template_id, phone):
             }
         ),
         "phone_no": phone,
+        "prefer_gateway": 1,
     }
     url = "%s%s?%s" % (host, SMS_PATH, urllib.urlencode(payload))
     urllib2.urlopen(url)
